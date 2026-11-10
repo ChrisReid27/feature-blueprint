@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EquityRouteImport } from './routes/equity'
+import { Route as FraudRouteImport } from './routes/fraud'
+import { Route as SeoRouteImport } from './routes/seo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EquityRoute = EquityRouteImport.update({
+  id: '/equity',
+  path: '/equity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FraudRoute = FraudRouteImport.update({
+  id: '/fraud',
+  path: '/fraud',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeoRoute = SeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/equity': typeof EquityRoute
+  '/fraud': typeof FraudRoute
+  '/seo': typeof SeoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/equity': typeof EquityRoute
+  '/fraud': typeof FraudRoute
+  '/seo': typeof SeoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/equity': typeof EquityRoute
+  '/fraud': typeof FraudRoute
+  '/seo': typeof SeoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/equity' | '/fraud' | '/seo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/equity' | '/fraud' | '/seo'
+  id: '__root__' | '/' | '/equity' | '/fraud' | '/seo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EquityRoute: typeof EquityRoute
+  FraudRoute: typeof FraudRoute
+  SeoRoute: typeof SeoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/equity': {
+      id: '/equity'
+      path: '/equity'
+      fullPath: '/equity'
+      preLoaderRoute: typeof EquityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fraud': {
+      id: '/fraud'
+      path: '/fraud'
+      fullPath: '/fraud'
+      preLoaderRoute: typeof FraudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seo': {
+      id: '/seo'
+      path: '/seo'
+      fullPath: '/seo'
+      preLoaderRoute: typeof SeoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EquityRoute: EquityRoute,
+  FraudRoute: FraudRoute,
+  SeoRoute: SeoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
