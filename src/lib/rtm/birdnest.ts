@@ -94,16 +94,18 @@ export function runBirdnest(ratings: Rating[], K = 3): UserScore[] {
     return v;
   });
   const joint = rc.map((r, i) => [...r, ...ic[i]]);
-  const { theta, assign } = fitMixture(joint, K);
-  const sx = rc.map((c, i) => surprise(c, norm(theta[assign[i]].slice(0, STARS))));
-  const sd = ic.map((c, i) => surprise(c, norm(theta[assign[i]].slice(STARS))));
+  const { theta, pi, assign } = fitMixture(joint, K);
+  // Expected behavior = population mixture (Σ πₖθₖ), so a small fraud cluster can't "explain itself".
+  const mix = theta[0].map((_, j) => theta.reduce((a, th, k) => a + pi[k] * th[j], 0));
+  const sx = rc.map((c) => surprise(c, norm(mix.slice(0, STARS))));
+  const sd = ic.map((c) => surprise(c, norm(mix.slice(STARS))));
   const ox = std(sx), od = std(sd);
   return users.map((u, i) => {
     const rs = byUser.get(u)!;
     const n = rs.length;
     const avg = rs.reduce((a, r) => a + r.stars, 0) / n;
     const share5 = rc[i][4] / n, share1 = rc[i][0] / n;
-    const burst = n >= 4 && share5 >= 0.9 ? "boost" : n >= 4 && share1 >= 0.9 ? "defame" : null;
+    const burst: UserScore["burst"] = n >= 4 && share5 >= 0.9 ? "boost" : n >= 4 && share1 >= 0.9 ? "defame" : null;
     let dupText = false;
     for (let a = 0; a < rs.length && !dupText; a++)
       for (let b = a + 1; b < rs.length; b++)

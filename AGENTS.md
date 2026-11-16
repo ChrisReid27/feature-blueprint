@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Module logic lives in pure functions under `src/lib/rtm/` (tested in `src/test/rtm-rules.test.ts`); routes only render. Why: requirement rules stay verifiable per R-id.
+- `noUncheckedIndexedAccess` is off: the numeric engines index arrays heavily and the guards add noise.
+- tesseract.js is only dynamically imported inside a click handler. Why: it is browser-only and heavy.

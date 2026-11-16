@@ -65,10 +65,12 @@ export function dominantColors(im: Img, k = 4) {
     b[0] += im.d[i]; b[1] += im.d[i + 1]; b[2] += im.d[i + 2]; b[3]++;
     bins.set(key, b);
   }
-  return [...bins.values()].sort((a, b) => b[3] - a[3]).slice(0, k).map(([r, g, b, n]) => {
+  const all = [...bins.values()].sort((a, b) => b[3] - a[3]).map(([r, g, b, n]) => {
     const [R, G, B] = [r / n, g / n, b / n].map(Math.round);
     return { rgb: `rgb(${R},${G},${B})`, name: colorName(R, G, B) };
   });
+  const seen = new Set<string>();
+  return all.filter((c) => !seen.has(c.name) && seen.add(c.name)).slice(0, k + 2);
 }
 function colorName(r: number, g: number, b: number) {
   const mx = Math.max(r, g, b), mn = Math.min(r, g, b);

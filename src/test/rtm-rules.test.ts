@@ -32,9 +32,9 @@ describe("RTM rules", () => {
   it("R10 publishing blocked without two citations", () =>
     expect(eeatGate({ author: "a", credentials: "b", citations: 1, reviewer: "c" }).pass).toBe(false));
   it("R26 home equity excluded from business equity", () => {
-    const b = BUSINESSES[0];
+    const b = BUSINESSES[0]!;
     expect(equitySplit(b).businessEquity).toBe(b.assets - b.debt);
   });
-  it("R30 flags debt/equity above 2", () => expect(capitalGap({ ...BUSINESSES[0], assets: 300, debt: 250, revenue: 0 }).flagged).toBe(true));
+  it("R30 flags debt/equity above 2", () => expect(capitalGap({ ...BUSINESSES[0]!, assets: 300, debt: 250, revenue: 0 }).flagged).toBe(true));
   it("R27 payroll benchmarks", () => expect(PAYROLL_BENCHMARK).toEqual({ minority: 38204, nonMinority: 56702 }));
 });

@@ -33,7 +33,7 @@ function Equity() {
   const avgPay = BUSINESSES.reduce((a, b) => a + b.payroll, 0) / BUSINESSES.reduce((a, b) => a + b.employees, 0);
 
   const lend = (biz: string, amount: number) => {
-    if (amount > available) return toast.error("Exceeds available fund balance");
+    if (amount > available) { toast.error("Exceeds available fund balance"); return; }
     setLoans((l) => [...l, { biz, amount, repaid: 0 }]);
     toast.success(`${money(amount)} disbursed to ${biz}`);
   };

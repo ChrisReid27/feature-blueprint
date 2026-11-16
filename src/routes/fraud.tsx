@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Code, PageHeader, Panel, Stat } from "@/components/rtm/Shell";
@@ -32,6 +32,8 @@ function Fraud() {
     const scores = runBirdnest(ratings, K);
     return { scores, ms: performance.now() - t0 };
   }, [ratings, K]);
+  const [shownMs, setShownMs] = useState<number | null>(null);
+  useEffect(() => setShownMs(ms), [ms]);
   const [sel, setSel] = useState<string | null>(null);
   const flagged = scores.filter((s) => s.nest > tau);
   const current = scores.find((s) => s.user === (sel ?? scores[0]?.user))!;
@@ -61,7 +63,7 @@ function Fraud() {
         <Stat label="Users" value={scores.length} />
         <Stat label="Flagged (NEST>τ)" value={flagged.length} tone="bad" />
         <Stat label="Precision @10" value={`${precision(10)}%`} tone="good" />
-        <Stat label="Compute time" value={`${ms.toFixed(0)} ms`} />
+        <Stat label="Compute time" value={shownMs === null ? "—" : `${shownMs.toFixed(0)} ms`} />
       </div>
 
       <Panel reqs={["R11", "R18"]} title="Mixture model controls — EM over rating + time-gap counts, O(#it·m·K)">
@@ -113,7 +115,7 @@ function Fraud() {
           <Panel reqs={["R15"]} title="Moderator sanctions (US 15)">
             <div className="flex flex-wrap gap-2">
               {(["badge revoked", "reviews purged", "listing suspended"] as Sanction[]).map((s) => (
-                <Button key={s} size="sm" variant={current.nest > tau ? "default" : "outline"} onClick={() => apply(current.user, s)}>{s.replace(/ .*/, (m) => m)}</Button>
+                <Button key={s} size="sm" variant={current.nest > tau ? "default" : "outline"} onClick={() => apply(current.user, s)}>{s}</Button>
               ))}
             </div>
             <Button size="sm" variant="destructive" className="mt-2 w-full" onClick={() => flagged.forEach((f) => apply(f.user, "reviews purged"))}>Auto-purge all {flagged.length} flagged</Button>
