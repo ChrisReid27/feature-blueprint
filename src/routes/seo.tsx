@@ -8,33 +8,35 @@ import { answerBlocks, clusters, comprehensiveness, cwv, eeatGate, forecast, hre
 export const Route = createFileRoute("/seo")({
   head: () => ({
     meta: [
-      { title: "AI-SEO & GEO Engine · RTM Console" },
+      { title: "Get discovered · Neighborly" },
       { name: "description", content: "Answer blocks, JSON-LD, topic clusters, internal links, hreflang and an E-E-A-T publish gate." },
       { property: "og:title", content: "AI-SEO & Generative Engine Optimization" },
       { property: "og:description", content: "Optimize drafts for AI Overviews and LLM search." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Seo,
 });
 
-const DRAFT = `# Solar Panel Maintenance Guide
-## How often should solar panels be cleaned?
-Most residential solar panels should be cleaned two to four times per year. Dust, pollen and bird droppings can cut energy output by 5 to 25 percent depending on climate. Homes in desert regions such as Dubai or Riyadh need monthly cleaning because sand accumulates quickly. Use soft brushes and deionized water rather than pressure washers, which can damage the anti-reflective coating and void the inverter warranty.
+const DRAFT = `# Juniper & Honey — Neighborhood Café
+## How often should coffee panels be cleaned?
+Most residential coffee panels should be cleaned two to four times per year. Dust, pollen and bird droppings can cut energy output by 5 to 25 percent depending on climate. Homes in desert regions such as Dubai or Riyadh need monthly cleaning because sand accumulates quickly. Use soft brushes and deionized water rather than pressure washers, which can damage the anti-reflective coating and void the inverter warranty.
 ## What tools do I need?
 A soft brush, a squeegee and a hose are enough for most roofs. Professional crews use water-fed poles.`;
 
 const PAGES = [
-  { url: "/solar-inverters", keyword: "inverter", inbound: 3 },
+  { url: "/coffee-inverters", keyword: "inverter", inbound: 3 },
   { url: "/anti-reflective-coating", keyword: "anti-reflective coating", inbound: 0 },
-  { url: "/desert-solar", keyword: "desert", inbound: 0 },
+  { url: "/desert-coffee", keyword: "desert", inbound: 0 },
   { url: "/roof-safety", keyword: "ladder", inbound: 2 },
 ];
 
 function Seo() {
-  const [title, setTitle] = useState("Solar Panel Maintenance Guide");
+  const [title, setTitle] = useState("Juniper & Honey — Neighborhood Café");
   const [draft, setDraft] = useState(DRAFT);
   const [terms, setTerms] = useState("cleaning frequency, deionized water, warranty, efficiency loss, bird droppings, monitoring app, professional service, cost");
-  const [kws, setKws] = useState("solar panel cleaning cost\nbest solar panel cleaning kit\nsolar panel cleaning near me\nhow to clean solar panels\nsolar inverter maintenance\nsolar inverter vs microinverter\nsolar panel efficiency loss");
+  const [kws, setKws] = useState("coffee panel cleaning cost\nbest coffee panel cleaning kit\ncoffee panel cleaning near me\nhow to clean coffee panels\ncoffee inverter maintenance\ncoffee inverter vs microinverter\ncoffee panel efficiency loss");
   const [trend, setTrend] = useState("120, 135, 150, 170, 160, 190, 210");
   const [vitals, setVitals] = useState({ lcp: 2.1, inp: 240, cls: 0.05 });
   const [gate, setGate] = useState({ author: "", credentials: "", citations: 0, reviewer: "" });
@@ -42,10 +44,10 @@ function Seo() {
 
   const sections = useMemo(() => parseSections(draft), [draft]);
   const blocks = answerBlocks(sections);
-  const ld = jsonLd(title, gate.author, sections, "https://example.com/en/solar-maintenance");
+  const ld = jsonLd(title, gate.author, sections, "https://example.com/en/coffee-maintenance");
   const comp = comprehensiveness(draft, terms.split(",").map((t) => t.trim()).filter(Boolean));
   const kwList = kws.split("\n").map((k) => k.trim()).filter(Boolean);
-  const cl = clusters(kwList, "solar");
+  const cl = clusters(kwList, "coffee");
   const series = trend.split(",").map(Number).filter((n) => !isNaN(n));
   const fc = series.length > 1 ? forecast(series) : [];
   const links = internalLinks(draft, PAGES);
@@ -56,7 +58,7 @@ function Seo() {
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <PageHeader code="PF-1 · R1–R10" title="AI-SEO & Generative Engine Optimization">
-        Write or paste a draft in Markdown. Every panel below updates live to show how AI search engines will read and cite it.
+        Make your business story easier to find. Review your description, customer questions, and search suggestions before publishing.
       </PageHeader>
       <div className="grid gap-4 lg:grid-cols-2">
         <Panel reqs={["R10"]} title="Draft editor (human-in-the-loop)">
@@ -80,12 +82,12 @@ function Seo() {
           <textarea value={terms} onChange={(e) => setTerms(e.target.value)} rows={3} className="mt-2 w-full rounded border bg-background p-2 text-xs" />
           <p className="mt-1 text-xs text-muted-foreground">Missing: {comp.missing.join(", ") || "none"}</p>
         </Panel>
-        <Panel reqs={["R4"]} title="Internal linking & orphan pages">
+        <Panel reqs={["R4"]} title="Internal linking & unlinked pages">
           <ul className="space-y-1 text-xs">
             {links.map((l) => (
               <li key={l.url} className="flex justify-between gap-2 border-b pb-1">
-                <span className="font-mono">{l.url}{l.orphan && <span className="ml-1 text-destructive">orphan</span>}</span>
-                <span className={l.suggest ? "text-success" : "text-muted-foreground"}>{l.suggest ? `link "${l.keyword}"` : "no anchor in draft"}</span>
+                <span className="font-mono">{l.url}{l.unlinked && <span className="ml-1 text-destructive">unlinked</span>}</span>
+                <span className={l.suggest ? "text-success" : "text-muted-foreground"}>{l.suggest ? `link "${l.keyword}"` : "not mentioned yet"}</span>
               </li>
             ))}
           </ul>
@@ -94,7 +96,7 @@ function Seo() {
           <ul className="list-disc space-y-1 pl-4 text-xs">
             {questions.map((q) => <li key={q}>"Hey Google, {q.toLowerCase()}"</li>)}
             {questions.map((q) => <li key={q + "c"}>Conversational: "{q.replace(/\?$/, "")} for my home?"</li>)}
-            <li>Image alt: "{title} – technician cleaning rooftop solar panels with soft brush"</li>
+            <li>Image alt: "{title} – technician cleaning rooftop coffee panels with soft brush"</li>
           </ul>
         </Panel>
       </div>
@@ -126,18 +128,18 @@ function Seo() {
               <span className={v[k] ? "text-success" : "text-destructive"}>{v[k] ? "good" : "needs work"}</span>
             </label>
           ))}
-          {!v.inp && <p className="mt-1 text-xs text-muted-foreground">Fix: break up long tasks and defer third-party scripts.</p>}
-          {!v.lcp && <p className="mt-1 text-xs text-muted-foreground">Fix: preload hero image, serve AVIF/WebP.</p>}
+          {!v.inp && <p className="mt-1 text-xs text-muted-foreground">Your website responds slowly. Ask your website provider to improve response time.</p>}
+          {!v.lcp && <p className="mt-1 text-xs text-muted-foreground">Your main photo loads slowly. Ask your website provider to optimize it.</p>}
         </Panel>
         <Panel reqs={["R9"]} title="Bilingual EN/AR hreflang">
-          <Code>{hreflang("https://example.com/solar-maintenance").join("\n")}</Code>
+          <Code>{hreflang("https://example.com/coffee-maintenance").join("\n")}</Code>
           <p className="mt-2 text-xs text-muted-foreground" dir="rtl">دليل صيانة الألواح الشمسية — Arabic variant served RTL with lang="ar".</p>
         </Panel>
         <Panel reqs={["R10"]} title="E-E-A-T publish gate">
           {(["author", "credentials", "reviewer"] as const).map((k) => (
-            <input key={k} placeholder={k === "reviewer" ? "Expert reviewer name" : k === "author" ? "Author name" : "Author credentials"} value={gate[k]} onChange={(e) => setGate({ ...gate, [k]: e.target.value })} className="mb-1 h-8 w-full rounded border bg-background px-2 text-xs" />
+            <input key={k} placeholder={k === "reviewer" ? "Expert reviewer name" : k === "author" ? "Author name" : "Experience or qualifications"} value={gate[k]} onChange={(e) => setGate({ ...gate, [k]: e.target.value })} className="mb-1 h-8 w-full rounded border bg-background px-2 text-xs" />
           ))}
-          <label className="flex items-center gap-2 text-xs">Primary citations <input type="number" min={0} value={gate.citations} onChange={(e) => setGate({ ...gate, citations: +e.target.value })} className="h-7 w-16 rounded border bg-background px-2" /></label>
+          <label className="flex items-center gap-2 text-xs">Supporting sources <input type="number" min={0} value={gate.citations} onChange={(e) => setGate({ ...gate, citations: +e.target.value })} className="h-7 w-16 rounded border bg-background px-2" /></label>
           <ul className="my-2 text-xs">{Object.entries(eeat.checks).map(([k, ok]) => <li key={k} className={ok ? "text-success" : "text-muted-foreground"}>{ok ? "✓" : "○"} {k}</li>)}</ul>
           <div className="flex items-center gap-2">
             <Button size="sm" disabled={!eeat.pass || status === "published"} onClick={() => { setStatus("published"); toast.success("Published after editorial review"); }}>Publish</Button>

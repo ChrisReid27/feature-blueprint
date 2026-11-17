@@ -9,10 +9,12 @@ import { BUSINESSES, FUNDING_SOURCES, OPPORTUNITIES, PAYROLL_BENCHMARK, TOOLKIT,
 export const Route = createFileRoute("/equity")({
   head: () => ({
     meta: [
-      { title: "Small Business Equity & Procurement · RTM Console" },
+      { title: "Funding & contracts · Neighborly" },
       { name: "description", content: "Procurement matching, revolving loan funds, equity separation and capital gap analysis for minority businesses." },
       { property: "og:title", content: "Small Business Equity & Procurement" },
       { property: "og:description", content: "Match certified businesses to contracts and close capital gaps." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Equity,
@@ -41,7 +43,7 @@ function Equity() {
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <PageHeader code="PF-3 · R21–R30" title="Small Business Equity & Procurement">
-        Connect certified minority-owned businesses with public and corporate buyers, track revolving loans, and pinpoint capital gaps.
+        Find contract opportunities, explore funding, and build your next chapter.
       </PageHeader>
       <Panel reqs={["R21"]} title="Ecosystem landscape & impact report">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -61,7 +63,7 @@ function Equity() {
                 const st = stage[o.id] ?? 0;
                 return (
                   <tr key={o.id} className="border-t">
-                    <td className="p-1"><div className="font-semibold">{o.buyer}</div><div className="text-muted-foreground">{o.type} · NAICS {o.naics}</div></td>
+                    <td className="p-1"><div className="font-semibold">{o.buyer}</div><div className="text-muted-foreground">{o.type} · Industry {o.naics}</div></td>
                     <td>{o.track}{o.goalPct ? ` · ${o.goalPct}% goal` : " · simplified bid"}</td>
                     <td className="font-mono">{money(o.value)}</td>
                     <td>{best.name}</td>
@@ -109,7 +111,7 @@ function Equity() {
                 <div className="grid grid-cols-3 gap-2">
                   <Stat label="Business equity" value={money(e.businessEquity)} />
                   <Stat label="Home equity (excluded)" value={money(e.homeEquity)} />
-                  <Stat label="Debt / equity" value={isFinite(g.debtToEquity) ? g.debtToEquity.toFixed(2) : "∞"} tone={g.debtToEquity > 2 ? "bad" : "good"} />
+                  <Stat label="Borrowing ratio" value={isFinite(g.debtToEquity) ? g.debtToEquity.toFixed(2) : "∞"} tone={g.debtToEquity > 2 ? "bad" : "good"} />
                 </div>
                 <p className="mt-2 text-xs">{Math.round(e.homeShare * 100)}% of this owner's net worth is in their home, not the business.</p>
                 {g.flagged ? (
@@ -125,7 +127,7 @@ function Equity() {
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <Panel reqs={["R27"]} title="Payroll & sales analytics" className="lg:col-span-2">
-          <p className="mb-2 text-xs text-muted-foreground">Portfolio avg pay/worker: <b>{money(avgPay)}</b> · benchmarks: minority-owned {money(PAYROLL_BENCHMARK.minority)}, non-minority {money(PAYROLL_BENCHMARK.nonMinority)}</p>
+          <p className="mb-2 text-xs text-muted-foreground">Average pay per employee: <b>{money(avgPay)}</b> · benchmarks: minority-owned {money(PAYROLL_BENCHMARK.minority)}, non-minority {money(PAYROLL_BENCHMARK.nonMinority)}</p>
           <div className="h-52">
             <ResponsiveContainer>
               <BarChart data={BUSINESSES.map((b) => ({ name: b.name.split(" ")[0], "Pay / worker": Math.round(b.payroll / b.employees), "Sales / worker": Math.round(b.revenue / b.employees / 4) }))}>

@@ -8,10 +8,12 @@ import { aHash, angle, blobs, defectGrid, dominantColors, gray, hamming, normali
 export const Route = createFileRoute("/vision")({
   head: () => ({
     meta: [
-      { title: "Computer Vision Lab · RTM Console" },
+      { title: "Photo & shop tools · Neighborly" },
       { name: "description", content: "OCR, defect detection, shelf counting, visual tagging, segmentation, pose angles and touchless access in the browser." },
       { property: "og:title", content: "Computer Vision & Image Recognition" },
       { property: "og:description", content: "Run vision checks on any uploaded image." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Vision,
@@ -101,7 +103,7 @@ function Vision() {
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <PageHeader code="PF-4 · R31–R40" title="Computer Vision Lab">
-        Upload a photo, scan, or video frame — or use the built-in shelf sample — and pick a tool. All analysis runs privately in your browser.
+        Manage product photos, read documents, and explore visual tools for your business.
       </PageHeader>
       <div className="grid gap-4 lg:grid-cols-5">
         <div className="space-y-3 lg:col-span-3">
@@ -130,9 +132,9 @@ function Vision() {
           </div>
         </div>
         <div className="space-y-4 lg:col-span-2">
-          {tool === "defects" && <Panel reqs={["R33"]} title="Assembly-line defect detection"><Stat label="Defect cells" value={defects?.cells.filter(Boolean).length ?? 0} tone={defects?.cells.some(Boolean) ? "bad" : "good"} /><p className="mt-2 text-xs text-muted-foreground">Cells with abnormal edge energy (&gt; mean + 2σ) are flagged as scratches or cracks.</p></Panel>}
+          {tool === "defects" && <Panel reqs={["R33"]} title="Assembly-line defect detection"><Stat label="Defect cells" value={defects?.cells.filter(Boolean).length ?? 0} tone={defects?.cells.some(Boolean) ? "bad" : "good"} /><p className="mt-2 text-xs text-muted-foreground">Highlighted areas may need a closer quality check.</p></Panel>}
           {tool === "inventory" && <Panel reqs={["R34", "R35", "R40"]} title="Shelf scan / object & player tracking"><div className="grid grid-cols-2 gap-2"><Stat label="Objects detected" value={objs.length} /><Stat label="Lighting" value="normalized" tone="good" /></div><p className="mt-2 text-xs text-muted-foreground">Brightness is stretched before detection so dim and bright areas count equally. Each object gets a stable ID and position for sorting or tracking players.</p></Panel>}
-          {tool === "segment" && <Panel reqs={["R38"]} title="Biomedical region segmentation"><Stat label="High-intensity region" value={`${segShare}% of frame`} /><p className="mt-2 text-xs text-muted-foreground">Intensity threshold segmentation for X-ray/MRI/ultrasound slices. Prototype — not for clinical use.</p></Panel>}
+          {tool === "segment" && <Panel reqs={["R38"]} title="Biomedical region segmentation"><Stat label="High-intensity region" value={`${segShare}% of frame`} /><p className="mt-2 text-xs text-muted-foreground">Explore highlighted scan regions. This sample tool is not for medical decisions.</p></Panel>}
           {tool === "tag" && <Panel reqs={["R36"]} title="Tap-to-buy tagging"><p className="text-xs">Click anywhere on the image to place a shoppable tag. {tags.length} tag(s) placed.</p></Panel>}
           {tool === "pose" && <Panel reqs={["R39"]} title="Pose form coach"><p className="text-xs">Click hip → knee → ankle.</p>{poseAngle !== null && <><Stat label="Knee angle" value={`${poseAngle.toFixed(0)}°`} tone={poseAngle >= 80 && poseAngle <= 100 ? "good" : "warn"} /><p className="mt-1 text-xs">{poseAngle > 100 ? "Squat deeper — aim for ~90°." : poseAngle < 80 ? "Too deep — rise slightly to protect knees." : "Great form!"}</p></>}</Panel>}
           <Panel reqs={["R37"]} title="Visual attributes (search-by-image)">

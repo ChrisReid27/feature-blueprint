@@ -9,10 +9,12 @@ import { LOSS_AVERSION, SAMPLE_REVIEWS, analyze, cronbachAlpha, empatheticReply,
 export const Route = createFileRoute("/sentiment")({
   head: () => ({
     meta: [
-      { title: "Sentiment & Reputation · RTM Console" },
+      { title: "Customer voices · Neighborly" },
       { name: "description", content: "Harvest reviews across platforms, detect sarcasm, prioritize negatives, spot pile-ons and reply with empathy." },
       { property: "og:title", content: "Social Sentiment & Reputation Management" },
       { property: "og:description", content: "Protect your local business reputation." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Sentiment,
@@ -26,7 +28,7 @@ function Sentiment() {
   const [enabled, setEnabled] = useState<Platform[]>(PLATFORMS);
   const [text, setText] = useState("");
   const [plat, setPlat] = useState<Platform>("Google");
-  const [zone, setZone] = useState("Vashi");
+  const [zone, setZone] = useState("Shaw");
   const [replies, setReplies] = useState<Record<number, { text: string; status: "drafted" | "sent" }>>({});
   const [survey, setSurvey] = useState(SURVEY.map((r) => r.join(",")).join("\n"));
 
@@ -50,17 +52,17 @@ function Sentiment() {
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <PageHeader code="PF-5 · R41–R50" title="Sentiment & Reputation Management">
-        Pull reviews from every platform into one place. Negative reviews jump the queue because one bad review hurts more than one good review helps.
+        See what customers love, prioritize concerns, and write thoughtful replies.
       </PageHeader>
       {critical.length > 0 && (
         <div id="R49" className="flex items-center justify-between rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
-          <span><span className="mr-2 rounded-sm bg-primary/10 px-1.5 font-mono text-[10px] text-primary">R49</span><b>{critical.length} high-risk reviews</b> need a reply{spikes.some(Boolean) && " · review pile-on in progress"}</span>
+          <span><b>{critical.length} high-risk reviews</b> need a reply{spikes.some(Boolean) && " · review pile-on in progress"}</span>
         </div>
       )}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="Reviews" value={all.length} />
         <Stat label="Negative" value={neg} tone="bad" />
-        <Stat label="Sarcasm caught" value={all.filter((r) => r.sarcasm).length} tone="warn" />
+        <Stat label="Subtle concerns" value={all.filter((r) => r.sarcasm).length} tone="warn" />
         <Stat label="Replied" value={Object.values(replies).filter((r) => r.status === "sent").length} tone="good" />
       </div>
       <Panel reqs={["R41"]} title="Multi-platform harvesting">
@@ -72,8 +74,8 @@ function Sentiment() {
         <div className="flex flex-wrap gap-2">
           <select value={plat} onChange={(e) => setPlat(e.target.value as Platform)} className="h-9 rounded border bg-background px-2 text-sm">{PLATFORMS.map((p) => <option key={p}>{p}</option>)}</select>
           <input value={zone} onChange={(e) => setZone(e.target.value)} placeholder="Zone" className="h-9 w-28 rounded border bg-background px-2 text-sm" />
-          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Paste a review to ingest…" className="h-9 min-w-48 flex-1 rounded border bg-background px-2 text-sm" />
-          <Button onClick={() => { if (!text.trim()) return; setReviews((r) => [...r, { id: r.length, platform: plat, zone, text, day: 8 }]); setText(""); }}>Ingest</Button>
+          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Paste customer feedback…" className="h-9 min-w-48 flex-1 rounded border bg-background px-2 text-sm" />
+          <Button onClick={() => { if (!text.trim()) return; setReviews((r) => [...r, { id: r.length, platform: plat, zone, text, day: 8 }]); setText(""); }}>Add review</Button>
         </div>
       </Panel>
       <div className="grid gap-4 lg:grid-cols-5">
@@ -85,13 +87,13 @@ function Sentiment() {
                   <span className={`rounded-sm px-1.5 font-semibold ${r.label === "negative" ? "bg-destructive/15 text-destructive" : r.label === "positive" ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>{r.label}</span>
                   {r.sarcasm && <span className="rounded-sm bg-warning/20 px-1.5">sarcasm</span>}
                   <span className="text-muted-foreground">{r.platform} · {r.zone} · {r.aspect}</span>
-                  <span className="ml-auto font-mono">intensity {r.intensity.toFixed(2)} · priority {r.priority.toFixed(2)}</span>
+                  
                 </div>
                 <p className="mt-1">"{r.text}"</p>
                 {replies[r.id] ? (
                   <div className="mt-1 rounded bg-muted p-2">
                     <textarea value={replies[r.id].text} disabled={replies[r.id].status === "sent"} onChange={(e) => setReplies({ ...replies, [r.id]: { ...replies[r.id], text: e.target.value } })} className="w-full rounded border bg-background p-1" rows={2} />
-                    {replies[r.id].status === "sent" ? <span className="text-success">✓ Sent to {r.platform}</span> : <Button size="sm" className="mt-1 h-6 text-[10px]" onClick={() => { setReplies({ ...replies, [r.id]: { ...replies[r.id], status: "sent" } }); toast.success("Reply posted"); }}>Approve & send</Button>}
+                    {replies[r.id].status === "sent" ? <span className="text-success">✓ Reply saved for {r.platform}</span> : <Button size="sm" className="mt-1 h-6 text-[10px]" onClick={() => { setReplies({ ...replies, [r.id]: { ...replies[r.id], status: "sent" } }); toast.success("Reply saved in this preview"); }}>Approve reply</Button>}
                   </div>
                 ) : <Button size="sm" variant="outline" className="mt-1 h-6 text-[10px]" onClick={() => setReplies({ ...replies, [r.id]: { text: empatheticReply(r), status: "drafted" } })}>Draft empathetic reply</Button>}
               </div>
@@ -112,7 +114,7 @@ function Sentiment() {
           </Panel>
           <Panel reqs={["R50"]} title="Instrument reliability — Cronbach's α">
             <textarea value={survey} onChange={(e) => setSurvey(e.target.value)} rows={4} className="w-full rounded border bg-background p-2 font-mono text-xs" />
-            <Stat label="α (target > 0.80)" value={isNaN(alpha) ? "—" : alpha.toFixed(3)} tone={alpha > 0.8 ? "good" : "bad"} />
+            <Stat label="Survey confidence" value={isNaN(alpha) ? "—" : alpha.toFixed(3)} tone={alpha > 0.8 ? "good" : "bad"} />
           </Panel>
         </div>
       </div>

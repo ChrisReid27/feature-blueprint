@@ -131,3 +131,35 @@
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+/* Neighborly: forest, coral, rose and honey on clean paper. */
+:root {
+ --background: oklch(0.985 0.003 100); --foreground: oklch(0.26 0.018 160);
+ --card: oklch(1 0 0); --card-foreground: var(--foreground); --popover:var(--card); --popover-foreground:var(--foreground);
+ --primary: oklch(0.39 0.065 164); --primary-foreground: oklch(0.99 0 0); --ring: var(--primary);
+ --secondary: oklch(0.94 0.017 158); --secondary-foreground:var(--primary); --muted: oklch(0.955 0.004 100); --muted-foreground: oklch(0.52 0.012 160);
+ --accent: oklch(0.94 0.025 158); --accent-foreground:var(--primary); --border: oklch(0.91 0.007 100); --input:var(--border);
+ --success: oklch(0.43 0.1 156); --warning: oklch(0.55 0.11 75); --rating: oklch(0.72 0.14 73);
+ --hero-foreground:oklch(1 0 0); --hero-shade:oklch(0.18 0.025 160 / 0.66);
+ --ownership-green:oklch(0.94 0.024 155); --ownership-rose:oklch(0.95 0.027 17); --ownership-gold:oklch(0.95 0.037 82);
+ --ownership-rose-ink:oklch(0.47 0.1 20); --ownership-gold-ink:oklch(0.46 0.09 77);
+ --map-land:oklch(0.94 0.015 87); --map-road:oklch(0.995 0 0); --map-water:oklch(0.83 0.05 221); --map-park:oklch(0.83 0.06 140);
+ --shadow-card:0 6px 22px oklch(0.25 0.02 160 / 0.05);
+ --sidebar:var(--primary); --sidebar-foreground:var(--primary-foreground);
+}
+@theme inline {
+ --font-sans: 'DM Sans', sans-serif; --font-display:'Lora',Georgia,serif;
+ --color-rating:var(--rating); --color-hero-foreground:var(--hero-foreground); --color-map-land:var(--map-land);
+}
+.page-width {width:100%;max-width:1220px;margin-inline:auto;padding-inline:40px;}
+.discovery-hero {min-height:380px;}
+.hero-shade {background:linear-gradient(90deg,var(--hero-shade),transparent);}
+.business-card {box-shadow:var(--shadow-card);}
+.ownership-tag {border-radius:4px;padding:4px 8px;font-size:10px;font-weight:500;background:var(--ownership-green);color:var(--primary);}
+.ownership-rose {background:var(--ownership-rose);color:var(--ownership-rose-ink);}
+.ownership-gold {background:var(--ownership-gold);color:var(--ownership-gold-ink);}
+.neighborhood-map {width:100% !important;height:480px !important;}
+.category-button[aria-pressed=true] {box-shadow:0 2px 0 var(--primary);}
+* {letter-spacing:0;}
+@media(max-width:640px){.page-width{padding-inline:20px;}.discovery-hero{min-height:400px;}.search-box{flex-wrap:wrap;}.role-switcher{width:100%;}.neighborhood-map{height:400px !important;}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;}}

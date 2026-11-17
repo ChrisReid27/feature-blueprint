@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EquityRouteImport } from './routes/equity'
 import { Route as FraudRouteImport } from './routes/fraud'
+import { Route as RequirementsRouteImport } from './routes/requirements'
 import { Route as SentimentRouteImport } from './routes/sentiment'
 import { Route as SeoRouteImport } from './routes/seo'
 import { Route as VisionRouteImport } from './routes/vision'
@@ -29,6 +30,11 @@ const EquityRoute = EquityRouteImport.update({
 const FraudRoute = FraudRouteImport.update({
   id: '/fraud',
   path: '/fraud',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequirementsRoute = RequirementsRouteImport.update({
+  id: '/requirements',
+  path: '/requirements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SentimentRoute = SentimentRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/equity': typeof EquityRoute
   '/fraud': typeof FraudRoute
+  '/requirements': typeof RequirementsRoute
   '/sentiment': typeof SentimentRoute
   '/seo': typeof SeoRoute
   '/vision': typeof VisionRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/equity': typeof EquityRoute
   '/fraud': typeof FraudRoute
+  '/requirements': typeof RequirementsRoute
   '/sentiment': typeof SentimentRoute
   '/seo': typeof SeoRoute
   '/vision': typeof VisionRoute
@@ -68,23 +76,46 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/equity': typeof EquityRoute
   '/fraud': typeof FraudRoute
+  '/requirements': typeof RequirementsRoute
   '/sentiment': typeof SentimentRoute
   '/seo': typeof SeoRoute
   '/vision': typeof VisionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/equity' | '/fraud' | '/sentiment' | '/seo' | '/vision'
+  fullPaths:
+    | '/'
+    | '/equity'
+    | '/fraud'
+    | '/requirements'
+    | '/sentiment'
+    | '/seo'
+    | '/vision'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/equity' | '/fraud' | '/sentiment' | '/seo' | '/vision'
+  to:
+    | '/'
+    | '/equity'
+    | '/fraud'
+    | '/requirements'
+    | '/sentiment'
+    | '/seo'
+    | '/vision'
   id:
-    '__root__' | '/' | '/equity' | '/fraud' | '/sentiment' | '/seo' | '/vision'
+    | '__root__'
+    | '/'
+    | '/equity'
+    | '/fraud'
+    | '/requirements'
+    | '/sentiment'
+    | '/seo'
+    | '/vision'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EquityRoute: typeof EquityRoute
   FraudRoute: typeof FraudRoute
+  RequirementsRoute: typeof RequirementsRoute
   SentimentRoute: typeof SentimentRoute
   SeoRoute: typeof SeoRoute
   VisionRoute: typeof VisionRoute
@@ -111,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/fraud'
       fullPath: '/fraud'
       preLoaderRoute: typeof FraudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/requirements': {
+      id: '/requirements'
+      path: '/requirements'
+      fullPath: '/requirements'
+      preLoaderRoute: typeof RequirementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sentiment': {
@@ -141,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EquityRoute: EquityRoute,
   FraudRoute: FraudRoute,
+  RequirementsRoute: RequirementsRoute,
   SentimentRoute: SentimentRoute,
   SeoRoute: SeoRoute,
   VisionRoute: VisionRoute,
