@@ -1,12 +1,231 @@
-import { Link, useLocation } from '@tanstack/react-router';
-import type { ReactNode } from 'react';
-import { MapPin, ArrowUpRight, Sprout, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-const pageNames:Record<string,string>={'/seo':'Get discovered','/fraud':'Community trust','/equity':'Grow your business','/vision':'Photo & shop tools','/sentiment':'Customer voices'};
-export function Shell({children}:{children:ReactNode}){const {pathname}=useLocation();const owner=['/owner','/seo','/equity','/sentiment'].includes(pathname);const moderator=pathname==='/fraud';return <div className="min-h-screen bg-background font-sans text-foreground"><header className="border-b bg-card"><div className="page-width flex min-h-20 flex-wrap items-center justify-between gap-3 py-3"><Link to="/" className="flex items-center gap-2 text-2xl font-bold text-primary"><Sprout size={27}/>neighborly<span className="text-foreground">.</span></Link><nav className="hidden items-center gap-7 text-sm md:flex"><Link to="/" className={!owner&&!moderator&&pathname!='/requirements'?'font-semibold text-primary':'text-muted-foreground'}>Discover</Link><Link to="/owner" className={owner?'font-semibold text-primary':'text-muted-foreground'}>For businesses</Link><Link to="/requirements" className="text-muted-foreground">Requirements</Link></nav><div className="flex items-center gap-4"><span className="hidden items-center gap-1 text-xs text-muted-foreground lg:flex"><MapPin size={15}/>Washington, D.C.</span><div className="role-switcher flex rounded-full border bg-background p-1">{[['Consumer','/'],['Owner','/owner'],['Moderator','/fraud']].map(([name,path])=><Button key={name} asChild size="sm" variant={(name==='Owner'&&owner)||(name==='Moderator'&&moderator)||(name==='Consumer'&&!owner&&!moderator)?'default':'ghost'} className="rounded-full px-3 text-[11px]"><Link to={path}>{name}</Link></Button>)}</div></div></div></header>{owner&&<div className="border-b bg-card"><nav className="page-width flex gap-6 overflow-x-auto py-3 text-xs">{[['Overview','/owner'],['Get discovered','/seo'],['Funding & contracts','/equity'],['Reviews','/sentiment'],['Photo tools','/vision']].map(([label,path])=><Link key={path} to={path} className={`shrink-0 ${pathname===path?'font-semibold text-primary':'text-muted-foreground'}`}>{label}</Link>)}</nav></div>}<main className={pathname==='/'?'':'page-width min-h-[65vh] py-8'}>{children}</main><footer className="border-t bg-card"><div className="page-width flex flex-wrap items-center justify-between gap-5 py-6 text-xs text-muted-foreground"><Link to="/" className="flex items-center gap-1 text-lg font-bold text-primary"><Sprout size={19}/>neighborly.</Link><span>Local roots. Stronger communities.</span><Link to="/requirements" className="flex items-center gap-1">Requirements<ArrowUpRight size={12}/></Link><span>Sample listings · changes last for this visit</span></div></footer></div>}
-export function PageHeader({title,children}:{code:string;title:string;children?:ReactNode}){const {pathname}=useLocation();return <header className="mb-6"><div className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">{pageNames[pathname]||'Your neighborhood'}</div><h1 className="font-display text-3xl">{pageNames[pathname]||title}</h1>{children&&<p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{children}</p>}</header>}
-const titles:Record<string,string>={R1:'Answers customers can find',R2:'Search-ready business details',R3:'Topics your customers care about',R4:'Connect your pages',R5:'Voice & photo search',R6:'Description completeness',R7:'Customer search trends',R8:'Website health',R9:'English & Arabic',R10:'Your description & editorial review',R11:'Review activity settings',R12:'Reviews needing attention',R14:'Review timing',R15:'Take action',R19:'Rating confidence',R20:'Verification report',R21:'Community business impact',R22:'Learning & mentoring',R23:'Contract opportunities',R24:'Loan tracker',R26:'Business finances',R27:'Payroll & sales',R28:'More ways to fund your business',R29:'Reach nearby customers',R31:'Read text from a photo',R32:'Entrance photo check',R33:'Product quality checks',R34:'Inventory & activity',R36:'Shoppable photo tags',R37:'Find similar colors',R38:'Scan image regions',R39:'Movement coaching',R41:'Reviews by platform',R42:'Reviews that need your attention',R45:'Unusual review activity',R47:'What customers are talking about',R48:'Feedback by neighborhood',R50:'Feedback survey quality'};
-export function Panel({reqs,title,children,className=''}:{reqs:string[];title:string;children:ReactNode;className?:string}){return <section id={reqs[0]} className={`feature-panel border-t py-5 ${className}`}><h2 className="mb-4 text-base font-semibold">{titles[reqs[0]]||title}</h2>{children}</section>}
-export function Stat({label,value,tone='default'}:{label:string;value:ReactNode;tone?:'default'|'good'|'bad'|'warn'}){return <div className="py-2"><div className="text-xs text-muted-foreground">{label}</div><div className={`mt-1 text-2xl font-semibold ${tone==='good'?'text-success':tone==='bad'?'text-destructive':tone==='warn'?'text-warning':''}`}>{value}</div></div>}
-export const Code=({children}:{children:ReactNode})=><details className="rounded border bg-card p-3 text-xs"><summary className="cursor-pointer text-primary">Download-ready details</summary><pre className="mt-3 max-h-60 overflow-auto whitespace-pre-wrap text-muted-foreground">{children}</pre></details>;
-export const money=(n:number)=>'$'+Math.round(n).toLocaleString('en-US');
+import { Link, useLocation } from "@tanstack/react-router";
+import type { ReactNode } from "react";
+import { MapPin, ArrowUpRight, Sprout } from "lucide-react";
+import { Button } from "@/components/ui/button";
+const pageNames: Record<string, string> = {
+  "/seo": "Get discovered",
+  "/fraud": "Community trust",
+  "/equity": "Grow your business",
+  "/vision": "Photo & shop tools",
+  "/sentiment": "Customer voices",
+};
+export function Shell({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+  const owner = ["/owner", "/seo", "/equity", "/sentiment", "/vision"].includes(pathname);
+  const moderator = pathname === "/fraud";
+  return (
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="border-b bg-card">
+        <div className="page-width flex min-h-20 flex-wrap items-center justify-between gap-3 py-3">
+          <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-primary">
+            <Sprout size={27} />
+            neighborly<span className="text-foreground">.</span>
+          </Link>
+          <nav className="hidden items-center gap-7 text-sm md:flex">
+            <Link
+              to="/"
+              className={
+                !owner && !moderator && pathname != "/requirements"
+                  ? "font-semibold text-primary"
+                  : "text-muted-foreground"
+              }
+            >
+              Discover
+            </Link>
+            <Link
+              to="/owner"
+              className={owner ? "font-semibold text-primary" : "text-muted-foreground"}
+            >
+              For businesses
+            </Link>
+            <Link to="/requirements" className="text-muted-foreground">
+              Requirements
+            </Link>
+          </nav>
+          <div className="flex items-center gap-4">
+            <span className="hidden items-center gap-1 text-xs text-muted-foreground lg:flex">
+              <MapPin size={15} />
+              Washington, D.C.
+            </span>
+            <div className="role-switcher flex rounded-full border bg-background p-1">
+              {[
+                ["Consumer", "/"],
+                ["Owner", "/owner"],
+                ["Moderator", "/fraud"],
+              ].map(([name, path]) => (
+                <Button
+                  key={name}
+                  asChild
+                  size="sm"
+                  variant={
+                    (name === "Owner" && owner) ||
+                    (name === "Moderator" && moderator) ||
+                    (name === "Consumer" && !owner && !moderator)
+                      ? "default"
+                      : "ghost"
+                  }
+                  className="rounded-full px-3 text-[11px]"
+                >
+                  <Link to={path}>{name}</Link>
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </header>
+      {owner && (
+        <div className="border-b bg-card">
+          <nav className="page-width flex gap-6 overflow-x-auto py-3 text-xs">
+            {[
+              ["Overview", "/owner"],
+              ["Get discovered", "/seo"],
+              ["Funding & contracts", "/equity"],
+              ["Reviews", "/sentiment"],
+              ["Photo tools", "/vision"],
+            ].map(([label, path]) => (
+              <Link
+                key={path}
+                to={path}
+                className={`shrink-0 ${pathname === path ? "font-semibold text-primary" : "text-muted-foreground"}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
+      <main className={pathname === "/" ? "" : "page-width min-h-[65vh] py-8"}>{children}</main>
+      <footer className="border-t bg-card">
+        <div className="page-width flex flex-wrap items-center justify-between gap-5 py-6 text-xs text-muted-foreground">
+          <Link to="/" className="flex items-center gap-1 text-lg font-bold text-primary">
+            <Sprout size={19} />
+            neighborly.
+          </Link>
+          <span>Local roots. Stronger communities.</span>
+          <Link to="/requirements" className="flex items-center gap-1">
+            Requirements
+            <ArrowUpRight size={12} />
+          </Link>
+          <span>Sample listings · changes last for this visit</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
+export function PageHeader({
+  title,
+  children,
+}: {
+  code: string;
+  title: string;
+  children?: ReactNode;
+}) {
+  const { pathname } = useLocation();
+  return (
+    <header className="mb-6">
+      <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+        {pageNames[pathname] || "Your neighborhood"}
+      </div>
+      <h1 className="font-display text-3xl">{pageNames[pathname] || title}</h1>
+      {children && (
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{children}</p>
+      )}
+    </header>
+  );
+}
+const titles: Record<string, string> = {
+  R1: "Answers customers can find",
+  R2: "Search-ready business details",
+  R3: "Topics your customers care about",
+  R4: "Connect your pages",
+  R5: "Voice & photo search",
+  R6: "Description completeness",
+  R7: "Customer search trends",
+  R8: "Website health",
+  R9: "English & Arabic",
+  R10: "Your description & editorial review",
+  R11: "Review activity settings",
+  R12: "Reviews needing attention",
+  R14: "Review timing",
+  R15: "Take action",
+  R19: "Rating confidence",
+  R20: "Verification report",
+  R21: "Community business impact",
+  R22: "Learning & mentoring",
+  R23: "Contract opportunities",
+  R24: "Loan tracker",
+  R26: "Business finances",
+  R27: "Payroll & sales",
+  R28: "More ways to fund your business",
+  R29: "Reach nearby customers",
+  R31: "Read text from a photo",
+  R32: "Entrance photo check",
+  R33: "Product quality checks",
+  R34: "Inventory & activity",
+  R36: "Shoppable photo tags",
+  R37: "Find similar colors",
+  R38: "Scan image regions",
+  R39: "Movement coaching",
+  R41: "Reviews by platform",
+  R42: "Reviews that need your attention",
+  R45: "Unusual review activity",
+  R47: "What customers are talking about",
+  R48: "Feedback by neighborhood",
+  R50: "Feedback survey quality",
+};
+export function Panel({
+  reqs,
+  title,
+  children,
+  className = "",
+}: {
+  reqs: string[];
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section id={reqs[0]} className={`feature-panel border-t py-5 ${className}`}>
+      {reqs.slice(1).map((id) => <span key={id} id={id} className="block scroll-mt-6" aria-hidden="true" />)}
+      <h2 className="mb-4 text-base font-semibold">{titles[reqs[0]] || title}</h2>
+      {children}
+    </section>
+  );
+}
+export function Stat({
+  label,
+  value,
+  tone = "default",
+}: {
+  label: string;
+  value: ReactNode;
+  tone?: "default" | "good" | "bad" | "warn";
+}) {
+  return (
+    <div className="py-2">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div
+        className={`mt-1 text-2xl font-semibold ${tone === "good" ? "text-success" : tone === "bad" ? "text-destructive" : tone === "warn" ? "text-warning" : ""}`}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+export const Code = ({ children }: { children: ReactNode }) => (
+  <Button
+    variant="outline"
+    size="sm"
+    onClick={() => {
+      const url = URL.createObjectURL(new Blob([String(children)], { type: "text/plain" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "business-details.txt";
+      link.click();
+      URL.revokeObjectURL(url);
+    }}
+  >
+    Download report
+  </Button>
+);
+export const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");

@@ -33,3 +33,7 @@ use the editor.
 - Module logic lives in pure functions under `src/lib/rtm/` (tested in `src/test/rtm-rules.test.ts`); routes only render. Why: requirement rules stay verifiable per R-id.
 - `noUncheckedIndexedAccess` is off: the numeric engines index arrays heavily and the guards add noise.
 - tesseract.js is only dynamically imported inside a click handler. Why: it is browser-only and heavy.
+
+- Directory preview state lives in a shared React provider, not browser storage; role selectors navigate demonstration views and never authorize users. Why: preserve session-only prototype scope without implying secure accounts.
+- Directory filter logic lives in `src/lib/rtm/directory.ts` and view components in `src/components/directory/`; route files mount views. Why: preserve testable domain logic and focused rendering.
+- The sample neighborhood map uses app-owned illustrative vectors with maintained zoom/pan controls, not geographic tiles. Why: show sample locations without pretending they are geocoded listings.

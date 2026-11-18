@@ -1,14 +1,130 @@
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { Plus, Minus, LocateFixed } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import type { Business } from '@/lib/rtm/directory';
-import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
-export function NeighborhoodMap({listings}: {listings:Business[]}) {
- const [selected,setSelected]=useState<string>(); const b=listings.find(x=>x.id===selected);
- return <div className="relative overflow-hidden rounded-lg border bg-map-land"><TransformWrapper initialScale={1} minScale={0.7} maxScale={3} centerOnInit><>{/* App-owned illustrative sample neighborhood, not geographic tiles. */}<TransformComponent wrapperClass="neighborhood-map" contentClass="map-content"><svg width="900" height="600" viewBox="0 0 900 600" role="img" aria-label="Illustrative neighborhood map"><rect width="900" height="600" fill="var(--map-land)"/><path d="M0 0H130L70 600H0Z" fill="var(--map-water)"/><path d="M540 380h220v200H540z" fill="var(--map-park)"/>{Array.from({length:10},(_,i)=><path key={'h'+i} d={`M130 ${i*70} H900`} stroke="var(--map-road)" strokeWidth="15"/>)}{Array.from({length:10},(_,i)=><path key={'v'+i} d={`M${160+i*80} 0 L${120+i*80} 600`} stroke="var(--map-road)" strokeWidth="12"/>)}{[['SHAW',250,130],['LOGAN CIRCLE',490,140],['PETWORTH',660,90],['CAPITOL HILL',340,520],['LINCOLN PARK',570,510]].map(([label,x,y])=><text key={label} x={x} y={y} fill="var(--muted-foreground)" fontSize="12">{label}</text>)}{listings.map(p=><g key={p.id} role="button" tabIndex={0} aria-label={`Show ${p.name}`} onClick={()=>setSelected(p.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')setSelected(p.id)}} className="cursor-pointer"><circle cx={p.x} cy={p.y} r="19" fill="var(--primary)" stroke="var(--card)" strokeWidth="3"/><text x={p.x} y={p.y+5} textAnchor="middle" fill="var(--primary-foreground)" fontSize="12" fontWeight="bold">{p.rating}</text></g>)}</svg></TransformComponent><MapControls/></></TransformWrapper>
- <span className="absolute bottom-3 left-3 rounded bg-card px-2 py-1 text-[10px] text-muted-foreground">Sample neighborhood · illustrative map</span>{b&&<div className="absolute left-4 top-4 max-w-64 rounded border bg-card p-4 shadow-sm"><Link to="/business/$id" params={{id:b.id}} className="font-bold text-primary">{b.name} ↗</Link><p className="mt-1 text-xs">{b.neighborhood} · {b.category}</p></div>}</div>;
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { Plus, Minus, LocateFixed } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { Business } from "@/lib/rtm/directory";
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+export function NeighborhoodMap({ listings }: { listings: Business[] }) {
+  const [selected, setSelected] = useState<string>();
+  const b = listings.find((x) => x.id === selected);
+  return (
+    <div className="relative overflow-hidden rounded-lg border bg-map-land">
+      <TransformWrapper initialScale={1} minScale={0.7} maxScale={3} centerOnInit>
+        <>
+          {/* App-owned illustrative sample neighborhood, not geographic tiles. */}
+          <TransformComponent wrapperClass="neighborhood-map" contentClass="map-content">
+            <svg
+              width="900"
+              height="600"
+              viewBox="0 0 900 600"
+              role="img"
+              aria-label="Illustrative neighborhood map"
+            >
+              <rect width="900" height="600" fill="var(--map-land)" />
+              <path d="M0 0H130L70 600H0Z" fill="var(--map-water)" />
+              <path d="M540 380h220v200H540z" fill="var(--map-park)" />
+              {Array.from({ length: 10 }, (_, i) => (
+                <path
+                  key={"h" + i}
+                  d={`M130 ${i * 70} H900`}
+                  stroke="var(--map-road)"
+                  strokeWidth="15"
+                />
+              ))}
+              {Array.from({ length: 10 }, (_, i) => (
+                <path
+                  key={"v" + i}
+                  d={`M${160 + i * 80} 0 L${120 + i * 80} 600`}
+                  stroke="var(--map-road)"
+                  strokeWidth="12"
+                />
+              ))}
+              {[
+                ["SHAW", 250, 130],
+                ["LOGAN CIRCLE", 490, 140],
+                ["PETWORTH", 660, 90],
+                ["CAPITOL HILL", 340, 520],
+                ["LINCOLN PARK", 570, 510],
+              ].map(([label, x, y]) => (
+                <text key={label} x={x} y={y} fill="var(--muted-foreground)" fontSize="12">
+                  {label}
+                </text>
+              ))}
+              {listings.map((p) => (
+                <g
+                  key={p.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Show ${p.name}`}
+                  onClick={() => setSelected(p.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") setSelected(p.id);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r="19"
+                    fill="var(--primary)"
+                    stroke="var(--card)"
+                    strokeWidth="3"
+                  />
+                  <text
+                    x={p.x}
+                    y={p.y + 5}
+                    textAnchor="middle"
+                    fill="var(--primary-foreground)"
+                    fontSize="12"
+                    fontWeight="bold"
+                  >
+                    {p.rating}
+                  </text>
+                </g>
+              ))}
+            </svg>
+          </TransformComponent>
+          <MapControls />
+        </>
+      </TransformWrapper>
+      <span className="absolute bottom-3 left-3 rounded bg-card px-2 py-1 text-[10px] text-muted-foreground">
+        Sample neighborhood · illustrative map
+      </span>
+      {b && (
+        <div className="absolute left-4 top-4 max-w-64 rounded border bg-card p-4 shadow-sm">
+          <Link to="/business/$id" params={{ id: b.id }} className="font-bold text-primary">
+            {b.name} ↗
+          </Link>
+          <p className="mt-1 text-xs">
+            {b.neighborhood} · {b.category}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
-function MapControls(){return <TransformWrapperControls/>;}
-import { useControls } from 'react-zoom-pan-pinch';
-function TransformWrapperControls(){const {zoomIn,zoomOut,resetTransform}=useControls();return <div className="absolute right-3 top-3 flex flex-col gap-1"><Button size="icon" variant="secondary" aria-label="Zoom in" onClick={()=>zoomIn()}><Plus/></Button><Button size="icon" variant="secondary" aria-label="Zoom out" onClick={()=>zoomOut()}><Minus/></Button><Button size="icon" variant="secondary" aria-label="Reset map" onClick={()=>resetTransform()}><LocateFixed/></Button></div>}
+function MapControls() {
+  return <TransformWrapperControls />;
+}
+import { useControls } from "react-zoom-pan-pinch";
+function TransformWrapperControls() {
+  const { zoomIn, zoomOut, resetTransform } = useControls();
+  return (
+    <div className="absolute right-3 top-3 flex flex-col gap-1">
+      <Button size="icon" variant="secondary" aria-label="Zoom in" onClick={() => zoomIn()}>
+        <Plus />
+      </Button>
+      <Button size="icon" variant="secondary" aria-label="Zoom out" onClick={() => zoomOut()}>
+        <Minus />
+      </Button>
+      <Button
+        size="icon"
+        variant="secondary"
+        aria-label="Reset map"
+        onClick={() => resetTransform()}
+      >
+        <LocateFixed />
+      </Button>
+    </div>
+  );
+}

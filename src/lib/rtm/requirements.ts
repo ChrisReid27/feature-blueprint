@@ -1,11 +1,15 @@
 export type ModuleId = "PF-1" | "PF-2" | "PF-3" | "PF-4" | "PF-5";
 
 export const MODULES: Record<ModuleId, { name: string; short: string; path: string }> = {
-  "PF-1": { name: "AI-SEO & Generative Engine Optimization", short: "AI-SEO / GEO", path: "/seo" },
-  "PF-2": { name: "BIRDNEST Bayesian Fraud Detection & Moderation", short: "BIRDNEST", path: "/fraud" },
-  "PF-3": { name: "Small Business Equity & Procurement", short: "Equity & Procurement", path: "/equity" },
-  "PF-4": { name: "Computer Vision & Image Recognition", short: "Vision", path: "/vision" },
-  "PF-5": { name: "Social Sentiment & Reputation Management", short: "Sentiment", path: "/sentiment" },
+  "PF-1": { name: "Owner · Get discovered", short: "Get discovered", path: "/seo" },
+  "PF-2": { name: "Moderator · Community trust", short: "Community trust", path: "/fraud" },
+  "PF-3": { name: "Owner · Funding & contracts", short: "Funding & contracts", path: "/equity" },
+  "PF-4": { name: "Consumer & Owner · Photo tools", short: "Photo tools", path: "/vision" },
+  "PF-5": {
+    name: "Consumer & Owner · Customer voices",
+    short: "Customer voices",
+    path: "/sentiment",
+  },
 };
 
 const R: [string, ModuleId][] = [
