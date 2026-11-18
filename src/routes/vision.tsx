@@ -73,6 +73,16 @@ function Vision() {
   const [pts, setPts] = useState<[number, number][]>([]);
   const [enrolled, setEnrolled] = useState<{ name: string; hash: number[] }[]>([]);
   const [access, setAccess] = useState<string | null>(null);
+  useEffect(() => {
+    const selectFromHash = () => {
+      const tools: Record<string, Tool> = { R33: "defects", R34: "inventory", R35: "inventory", R36: "tag", R38: "segment", R39: "pose", R40: "inventory" };
+      const next = tools[window.location.hash.slice(1)];
+      if (next) setTool(next);
+    };
+    selectFromHash();
+    window.addEventListener("hashchange", selectFromHash);
+    return () => window.removeEventListener("hashchange", selectFromHash);
+  }, []);
 
   const capture = () => {
     const c = cv.current;
